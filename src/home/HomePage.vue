@@ -17,11 +17,18 @@
           </p>
 
           <ul class="list-group" v-if="room">
-            <li
-              class="list-group-item"
-              v-for="userid in room.userIds"
-              :key="userid"
-            >{{users.items.find(_user => _user.id === userid).username}}</li>
+            <li class="list-group-item" v-for="userid in room.userIds" :key="userid">
+              <div class="row">
+                <div class="col-sm">{{users.items.find(_user => _user.id === userid).username}}</div>
+                <div class="col-sm" v-if="admins.items">
+                  <button
+                    class="btn btn-primary"
+                    v-if="user.username === admins.items.find(_admin => _admin.id === room.adminId).username"
+                    v-on:click="kick(room.id, userid)"
+                  >Kick</button>
+                </div>
+              </div>
+            </li>
           </ul>
 
           <br />
@@ -78,6 +85,19 @@ export default {
 
         fetch(`${config.apiUrl}/api/rooms/${room.id}`, requestOptions);
       }
+    },
+    kick(roomId, userId) {
+      let room = this.rooms.items.find(_room => _room.id === roomId);
+
+      room.userIds = room.userIds.filter(id => id !== userId);
+
+      const requestOptions = {
+        method: "PUT",
+        headers: authHeader(),
+        body: JSON.stringify(room)
+      };
+
+      fetch(`${config.apiUrl}/api/rooms/${room.id}`, requestOptions);
     }
   },
   created() {
