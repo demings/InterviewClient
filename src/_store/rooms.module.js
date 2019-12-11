@@ -14,7 +14,7 @@ export const rooms = {
                     rooms => commit('getAllSuccess', rooms),
                     error => commit('getAllFailure', error)
                 );
-        }
+        },
     },
     mutations: {
         getAllRequest(state) {

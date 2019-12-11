@@ -21,7 +21,10 @@ module.exports = {
         ]
     },
     plugins: [new HtmlWebpackPlugin({
-        template: './src/index.html'
+        template: './src/index.html',
+        configureWebpack: {
+            devtool: 'source-map'
+        }
     })],
     devServer: {
         historyApiFallback: true
