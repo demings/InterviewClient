@@ -1,47 +1,55 @@
 <template>
   <div>
-    <h1>Hi {{user.username}}!</h1>
-    <!-- <p>You're logged in with Vue + Vuex & JWT!!</p> -->
-    <!-- <h3>Rooms from secure api end point:</h3> -->
+    <div class="text-center">
+      <h1>Labas {{user.username}}!</h1>
+    </div>
+    <br />
     <em v-if="users.loading">Loading users...</em>
     <span v-if="users.error" class="text-danger">ERROR: {{users.error}}</span>
 
-    <ul class="list-group row" v-if="rooms.items">
-      <li class="card" v-for="room in rooms.items" :key="room.id">
-        <div class="card-header">{{room.name}}</div>
+    <ul class="list-group list-group-flush" v-if="rooms.items">
+      <li class="list-group-item" v-for="room in rooms.items" :key="room.id">
+        <div class="card">
+          <img
+            src="https://harver.com/wp-content/uploads/2019/03/PeerInterview@2x-1024x437.jpg"
+            class="card-img-top"
+          />
 
-        <div class="card-body">
-          <p v-if="admins.items">
-            Admin:
-            <b>{{admins.items.find(admin => admin.id === room.adminId).username}}</b>
-          </p>
+          <div class="card-header">{{room.name}}</div>
 
-          <ul class="list-group" v-if="room">
-            <li class="list-group-item" v-for="userid in room.userIds" :key="userid">
-              <div class="row">
-                <div class="col-sm">{{users.items.find(_user => _user.id === userid).username}}</div>
-                <div class="col-sm" v-if="admins.items">
-                  <button
-                    class="btn btn-primary"
-                    v-if="user.username === admins.items.find(_admin => _admin.id === room.adminId).username"
-                    v-on:click="kick(room.id, userid)"
-                  >Kick</button>
+          <div class="card-body">
+            <p v-if="admins.items">
+              Administratorius:
+              <b>{{admins.items.find(admin => admin.id === room.adminId).username}}</b>
+            </p>
+
+            <ul class="list-group" v-if="room">
+              <li class="list-group-item" v-for="userid in room.userIds" :key="userid">
+                <div class="row">
+                  <div class="col-sm">{{users.items.find(_user => _user.id === userid).username}}</div>
+                  <div class="col-sm" v-if="admins.items">
+                    <button
+                      class="btn btn-primary"
+                      v-if="user.username === admins.items.find(_admin => _admin.id === room.adminId).username"
+                      v-on:click="kick(room.id, userid)"
+                    >Išspirti</button>
+                  </div>
                 </div>
-              </div>
-            </li>
-          </ul>
+              </li>
+            </ul>
 
-          <br />
-
-          <div class="card-action">
-            <button class="btn btn-primary" v-on:click="join(room.id)">Join</button>
+            <div class="card-action" v-if="!room.userIds.includes(user.id)">
+              <br />
+              <button class="btn btn-primary" v-on:click="join(room.id)">Prisijungti</button>
+            </div>
           </div>
         </div>
       </li>
     </ul>
 
+    <br />
     <p>
-      <router-link to="/login">Logout</router-link>
+      <router-link to="/login">Atsijungti</router-link>
     </p>
   </div>
 </template>
